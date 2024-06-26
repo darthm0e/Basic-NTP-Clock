@@ -8,14 +8,15 @@
 #include "Adafruit_GFX.h"
 #include <Adafruit_ILI9341.h>
 
+//change this to your needs it can differ
 #define TFT_DC D4
 #define TFT_CS D2
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
-
-const char *ssid     = "VIDIT-Bingen";
-const char *password = "%m1n!5NK=$";
+//change this to your needs
+const char *ssid     = "YOUR-WLAN-TO-CONNECT-TO";
+const char *password = "YOUR-WLAN-PASSWORD";
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "2.de.pool.ntp.org", 7200);
@@ -26,20 +27,16 @@ WiFiClientSecure client;
 HTTPClient http;
 
 String payload;
-String cityURL = "https://wttr.in/Ockenheim?format=%l:+%t";
 
-//Week Days
-//String weekDays[7]={"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-
-//Month names
-//String months[12]={"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+//change to your City in the URL bsp:  https://wttr.in/Berlin?format=%l:+%t
+String cityURL = "https://wttr.in/Mainz?format=%l:+%t";
 
 void setup(){
   Serial.begin(115200);
   tft.begin();
   WiFi.begin(ssid, password);
 
-  //Rotate to Portrait - Pins Left
+  //Rotate to Portrait - Pins Left - with 1 Pins are right oriented
   tft.setRotation(3);
 
   tft.fillScreen(ILI9341_BLACK);
@@ -62,7 +59,9 @@ void setup(){
   }
 
   timeClient.begin();
-      client.setInsecure();
+
+  //HTTPS fetch thing starts here - see ESP8266HTTPClient example
+  client.setInsecure();
     Serial.print("[HTTP] begin...\n");
     if (http.begin(client, cityURL)) {  // HTTP
 
